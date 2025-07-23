@@ -64,3 +64,6 @@ def lambda_handler(event, context):
             'robotid': robotid
         })
     }
+
+Here is the URL-
+"http://localhost:8000/robot.html"
