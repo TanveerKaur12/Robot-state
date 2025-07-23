@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Send Robot State</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #f4f4f4;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    #response {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Send Robot State</h2>
+
+  <label for="state">State:</label>
+  <input type="text" id="state" placeholder="e.g., active" required>
+
+  <label for="location">Location:</label>
+  <input type="text" id="location" placeholder="e.g., hall" required>
+
+  <label for="battery">Battery:</label>
+  <input type="text" id="battery" placeholder="e.g., 90%" required>
+
+  <button onclick="sendData()">Submit</button>
+
+  <div id="response"></div>
+
+  <script>
+    function sendData() {
+      const state = document.getElementById("state").value;
+      const location = document.getElementById("location").value;
+      const battery = document.getElementById("battery").value;
+
+      fetch("https://jymcrvdewl.execute-api.ap-south-1.amazonaws.com/dev/state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ state, location, battery })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Request failed");
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById("response").textContent =
+          "✅ Success: " + data.message + " | Robot ID: " + data.robotid;
+        document.getElementById("response").style.color = "green";
+      })
+      .catch(error => {
+        document.getElementById("response").textContent = "❌ Error: " + error.message;
+        document.getElementById("response").style.color = "red";
+      });
+    }
+  </script>
+
+</body>
+</html>
